@@ -40,12 +40,12 @@ unionWith :: (value1 -> value2 -> value) -> TMap key value1 -> TMap key value2 -
 unionWith function tmap1 tmap2 =
   TMap ( \ key -> function ((tmapMeaning tmap1) key) ((tmapMeaning tmap2) key))
 
-maybeLeft :: Optional a -> Optional a -> Optional a
-maybeLeft (Present a) _ = Present a
-maybeLeft Absent maybe2 = maybe2
+optionalLeft :: Optional a -> Optional a -> Optional a
+optionalLeft (Present a) _ = Present a
+optionalLeft Absent optional2 = optional2
 
 unionLeft :: Map key value -> Map key value -> Map key value
-unionLeft = unionWith maybeLeft
+unionLeft = unionWith optionalLeft
 
 class Monoid a where
   neutral :: a

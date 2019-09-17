@@ -7,9 +7,9 @@ import Monoid
 data Optional a = Absent | Present a
   deriving (Eq, Ord, Read, Show)
 
-maybeLeft :: Optional a -> Optional a -> Optional a
-maybeLeft (Present a) _ = Present a
-maybeLeft Absent maybe2 = maybe2
+optionalLeft :: Optional a -> Optional a -> Optional a
+optionalLeft (Present a) _ = Present a
+optionalLeft Absent optional2 = optional2
 
 instance Monoid a => Monoid (Optional a) where
   neutral = Absent
