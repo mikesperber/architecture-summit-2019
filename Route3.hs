@@ -3,6 +3,7 @@
 module Route3 where
 
 import Prelude hiding (Monoid, Semigroup, Functor, fmap, Applicative, (<*>), pure)
+import Control.Monad (join)
 
 import Optional
 import Monoid
@@ -47,12 +48,21 @@ instance Functor RouteElement where
   fmap f (RouteOp op) = RouteOp (f op)
   fmap f (RouteQTZone d rr) = RouteQTZone d (fmap f rr)
 
+-- nonono - do it on RouteRem
 instance Applicative RouteElement where
  pure x = RouteOp x
  (RouteOp f) <*> (RouteOp x) = RouteOp (f x)
  (RouteOp f) <*> (RouteQTZone d rr) = RouteQTZone d (fmap f rr)
  (RouteQTZone d rr) <*> (RouteOp x) = undefined
-   
+
+-- monad instance
+joinRouteRem :: RouteRem (RouteRem op) -> RouteRem op
+joinRouteRem (RouteRem elements) = RouteRem (concat (fmap joinRouteElement elements))
+
+joinRouteElement :: RouteElement (RouteRem op) -> [RouteElement op]
+joinRouteElement (RouteOp (RouteRem elements)) = elements
+joinRouteElement (RouteQTZone d rr) =
+  [RouteQTZone d (joinRouteRem rr)]
 
 r1 = Route (RouteRem [RouteOp TrackIn, RouteOp Process, RouteOp Process, RouteOp TrackOut])
 r2 = Route (RouteRem [RouteOp TrackIn,
