@@ -2,7 +2,7 @@
 {-# LANGUAGE MultiParamTypeClasses #-}
 module TMap where
 
-import Prelude hiding (Monoid, Semigroup, Functor, map, Applicative, (<*>), pure)
+import Prelude hiding (Monoid, Semigroup, Functor, fmap, Applicative, (<*>), pure)
 
 import Functor
 import Applicative
@@ -27,8 +27,8 @@ instance Monoid value => Monoid (TMap key value) where
 inTMap f tmap = TMap (f (tmapMeaning tmap))
 
 instance Functor (TMap key) where
---  map f tmap = TMap (map f (tmapMeaning tmap))
-  map f = inTMap (map f)
+--  fmap f tmap = TMap (map f (tmapMeaning tmap))
+  fmap f = inTMap (fmap f)
   
 instance Applicative (TMap k) where
   pure value = TMap (\ key -> value)

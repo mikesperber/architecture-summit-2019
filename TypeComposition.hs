@@ -3,7 +3,7 @@
 {-# LANGUAGE TypeOperators #-}
 module TypeComposition where
 
-import Prelude hiding (Monoid, Semigroup, Functor, map, Applicative, (<*>), pure)
+import Prelude hiding (Monoid, Semigroup, Functor, fmap, Applicative, (<*>), pure)
 
 import Functor
 import Applicative
@@ -30,11 +30,11 @@ inO3 :: (g (f a)   -> g' (f' a')   -> g'' (f'' a'')   -> g''' (f''' a'''))
 inO3 f = \ (O x) (O x') (O x'') -> O (f x x' x'')
 
 fmapFF :: (  Functor g,   Functor f) => (a -> b) -> (g :. f) a -> (g :. f) b
-fmapFF = inO . map . map
+fmapFF = inO . fmap . fmap
 
 instance (Functor g, Functor f) => Functor (g :. f) where
   -- map = fmapFF
-  map f (O gfa) = O (map (map f) gfa)
+  fmap f (O gfa) = O (fmap (fmap f) gfa)
 
 instance (Applicative g, Applicative f) => Applicative (g :. f) where
   pure  = O . pure . pure

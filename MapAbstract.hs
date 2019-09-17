@@ -3,7 +3,7 @@
 {-# LANGUAGE MultiParamTypeClasses #-}
 module MapAbstract where
 
-import Prelude hiding (Monoid, Semigroup, Functor, map, Applicative, (<*>), pure)
+import Prelude hiding (Monoid, Semigroup, Functor, fmap, Applicative, (<*>), pure)
 
 import Optional
 import Functor

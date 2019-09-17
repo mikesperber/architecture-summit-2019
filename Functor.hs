@@ -1,14 +1,14 @@
 module Functor where
 
-import Prelude hiding (Monoid, Semigroup, Functor, map, Applicatice)
+import Prelude hiding (Monoid, Semigroup, Functor, fmap, Applicatice)
 
 class Functor f where
-  map :: (a -> b) -> f a -> f b
+  fmap :: (a -> b) -> f a -> f b
 
 {-
-map id = id
-map (h . g) = map h . map g
+fmap id = id
+fmap (h . g) = fmap h . fmap g
 -}
 
 instance Functor ((->) a) where
-  map = (.)
+  fmap = (.)

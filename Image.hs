@@ -67,7 +67,7 @@ instance Monoid a => Monoid (Image a) where
   combine = lift2 combine
 
 instance Functor Image where
-  map = lift1
+  fmap = lift1
 
 instance Applicative Image where
   pure   = lift0
