@@ -12,3 +12,6 @@ fmap (h . g) = fmap h . fmap g
 
 instance Functor ((->) a) where
   fmap = (.)
+
+instance Functor [] where
+  fmap = map

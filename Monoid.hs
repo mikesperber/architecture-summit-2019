@@ -8,6 +8,10 @@ class Monoid a where
   neutral :: a
   combine :: a -> a -> a -- closure of operations!
 
+instance Monoid [a] where
+  neutral = []
+  combine list1 list2 = list1 ++ list2
+  
 instance Monoid b => Monoid (a -> b) where
   neutral = \ a -> neutral
   combine f g = \ a -> combine (f a) (g a)

@@ -2,7 +2,12 @@
 {-# LANGUAGE GADTs #-}
 module Route3 where
 
+import Prelude hiding (Monoid, Semigroup, Functor, fmap, Applicative, (<*>), pure)
+
 import Optional
+import Monoid
+import Functor
+import Applicative
 
 type Duration = Int
 type Time = Int
@@ -28,11 +33,9 @@ newtype RouteRem op = RouteRem [RouteElement op]
 instance Functor RouteRem where
   fmap f (RouteRem els) = RouteRem (fmap (fmap f) els)
 
-instance Semigroup (RouteRem op) where
- (RouteRem els1) <> (RouteRem els2) = RouteRem (mappend els1 els2)
-
 instance Monoid (RouteRem op) where
-  mempty = RouteRem []
+  (RouteRem els1) `combine` (RouteRem els2) = RouteRem (combine els1 els2)
+  neutral = RouteRem []
 
 data RouteElement op where
   RouteOp :: op -> RouteElement op
