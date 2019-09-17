@@ -1,6 +1,4 @@
-{-# LANGUAGE FlexibleInstances #-}
-{-# LANGUAGE TypeSynonymInstances #-}
-{-# LANGUAGE MultiParamTypeClasses #-}
+{-# LANGUAGE TypeFamilies #-}
 module Image where
 
 import Prelude hiding (Monoid, Semigroup, Functor, map, Applicative, (<*>), pure)
@@ -14,7 +12,8 @@ type R = Double
   
 newtype Image a = Image { imageMeaning :: Location -> a }
 
-instance Meaning (Image a) (Location -> a) where
+instance Meaning (Image a) where
+  type MeaningOf (Image a) = Location -> a
   meaning = imageMeaning
 
 type Location = (R, R)

@@ -1,5 +1,4 @@
-{-# LANGUAGE FlexibleInstances #-}
-{-# LANGUAGE MultiParamTypeClasses #-}
+{-# LANGUAGE TypeFamilies #-}
 module TMap where
 
 import Prelude hiding (Monoid, Semigroup, Functor, fmap, Applicative, (<*>), pure)
@@ -11,7 +10,8 @@ import Meaning
 
 newtype TMap key value = TMap { tmapMeaning :: key -> value }
 
-instance Meaning (TMap key value) (key -> value) where
+instance Meaning (TMap key value) where
+  type MeaningOf (TMap key value) = key -> value
   meaning = tmapMeaning
 
 update :: Eq key => key -> value -> TMap key value -> TMap key value

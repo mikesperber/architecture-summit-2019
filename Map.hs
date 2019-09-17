@@ -1,5 +1,4 @@
-{-# LANGUAGE FlexibleInstances #-}
-{-# LANGUAGE MultiParamTypeClasses #-}
+{-# LANGUAGE TypeFamilies #-}
 module Map where
 
 import Prelude hiding (Monoid, Semigroup, Functor, fmap, Applicative, (<*>), pure)
@@ -13,7 +12,8 @@ data Optional a = Absent | Present a
 
 newtype TMap key value = TMap { tmapMeaning :: key -> value }
 
-instance Meaning (TMap key value) (key -> value) where
+instance Meaning (TMap key value) where
+  type MeaningOf (TMap key value) = key -> value
   meaning = tmapMeaning
 
 constant :: value -> TMap key value

@@ -1,7 +1,7 @@
-{-# LANGUAGE MultiParamTypeClasses #-}
-{-# LANGUAGE FunctionalDependencies #-}
+{-# LANGUAGE TypeFamilies #-}
 module Meaning where
 
-class Meaning a b | a -> b where
-  meaning :: a -> b
+class Meaning a where
+  type MeaningOf a
+  meaning :: a -> MeaningOf a
   

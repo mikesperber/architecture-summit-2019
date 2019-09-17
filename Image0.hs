@@ -1,6 +1,5 @@
 {-# LANGUAGE TypeOperators #-}
-{-# LANGUAGE MultiParamTypeClasses #-}
-{-# LANGUAGE FlexibleInstances #-}
+{-# LANGUAGE TypeFamilies #-}
 module Image0 where
 
 import Meaning
@@ -9,7 +8,8 @@ type R = Double
   
 newtype Image = Image { imageMeaning :: Location -> Color }
 
-instance Meaning Image (Location -> Color) where
+instance Meaning Image where
+  type MeaningOf Image = Location -> Color
   meaning = imageMeaning
 
 data Bitmap = Bitmap
