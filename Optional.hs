@@ -7,6 +7,8 @@ import Monoid
 data Optional a = Absent | Present a
   deriving (Eq, Ord, Read, Show)
 
+-- exercise: functor
+
 optionalLeft :: Optional a -> Optional a -> Optional a
 optionalLeft (Present a) _ = Present a
 optionalLeft Absent optional2 = optional2
