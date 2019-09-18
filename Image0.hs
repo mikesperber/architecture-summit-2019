@@ -5,19 +5,13 @@ module Image0 where
 import Meaning
 
 type R = Double
-  
+type Location = (R, R)
+
 newtype Image = Image { imageMeaning :: Location -> Color }
 
 instance Meaning Image where
   type MeaningOf Image = Location -> Color
   meaning = imageMeaning
-
-data Bitmap = Bitmap
-
-fromBitmap  :: Bitmap -> Image
-fromBitmap bitmap = undefined
-toBitmap    :: Image -> Bitmap
-toBitmap image = undefined
 
 type Color = (R, R, R)
 
@@ -44,16 +38,17 @@ over imageTop imageBottom = Image (\ location -> overColor ((meaning imageTop) l
 
 newtype Region = Region { regionMeaning :: Location -> Bool }
 
-crop :: Region -> Image -> Image
-crop region image = Image (\ location -> if (regionMeaning region) location
-                                         then (meaning image) location
-                                              else clear)
+instance Meaning Region where
+  type MeaningOf Region = Location -> Bool
+  meaning = regionMeaning
 
-type Location = (R, R)
+crop :: Region -> Image -> Image
+crop region image = Image (\ location -> if (meaning region) location
+                                         then (meaning image) location
+                                         else clear)
 
 magnitude :: Location -> R
 magnitude (x, y) = sqrt (x*x + y*y)
-
 
 overColor :: Color -> Color -> Color
 overColor topColor bottomColor = undefined
@@ -74,4 +69,3 @@ inImage2 f = \ image1 image2 -> Image (f (meaning image1) (meaning image2))
 
 -- then reformulate over, crop in terms of this ... FIXME: only over works here
 
--- FIXME: meaning typeclass, formulate equations in terms of them

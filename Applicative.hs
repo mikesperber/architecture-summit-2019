@@ -10,7 +10,12 @@ class Functor f => Applicative f where
   pure :: a -> f a
   (<*>) :: f (a -> b) -> f a -> f b
 
--- FIXME: laws
+{-
+pure id <*> v = v                            -- Identity
+pure f <*> pure x = pure (f x)               -- Homomorphism
+u <*> pure y = pure ($ y) <*> u              -- Interchange
+pure (.) <*> u <*> v <*> w = u <*> (v <*> w) -- Composition
+-}
 
 liftApplicative2 :: Applicative f => (a -> b -> c) -> (f a -> f b -> f c)
 liftApplicative2 f a b = (pure f) <*> a <*> b

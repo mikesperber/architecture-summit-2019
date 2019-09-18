@@ -9,14 +9,13 @@ import Applicative
 import Meaning
 
 type R = Double
+type Location = (R, R)
   
 newtype Image a = Image { imageMeaning :: Location -> a }
 
 instance Meaning (Image a) where
   type MeaningOf (Image a) = Location -> a
   meaning = imageMeaning
-
-type Location = (R, R)
 
 type ImageC  = Image Color
 type Region  = Image Bool
@@ -72,82 +71,3 @@ instance Applicative Image where
   pure   = lift0
   (<*>)  = lift2 ($)
 
-{-
-transform  :: Transform -> Image a -> Image a
-
-meaning :: Transform -> ??
-
-meaning (transform tr im)  == ??
-
-
-meaning :: Transform -> ??
-
-meaning (transform tr im) == transformS (meaning tr) (meaning im)
-
-transformS :: ?? -> (Loc -> Color) -> (Loc -> Color)
-
--- exercise!
-meaning :: Transform -> (Loc -> Loc)
-
-meaning (transform tr im)  == transformS (meaning tr) (meaning im)
-
-transformS :: (Loc -> Loc) -> (Loc -> Color) -> (Loc -> Color)
-
-transformS h f = \ p -> f (h p)
--}
-
-{-
-mu mempty        == \ p -> mempty
-mu (top <> bot)  == \ p -> mu top p <> mu bot p
-
-mu (fmap f im)  == \ p -> f (mu im p)
-                == f . mu im
-mu (pure a)       == \ p -> a
-mu (imf <*> imx)  == \ p -> (mu imf p) (mu imx p)
-
-class Monad f where
-  return  :: a -> f a
-  join    :: f (f a) -> f a
-
-class Functor f => Comonad f where
-  coreturn  :: f a -> a
-  cojoin    :: f a -> f (f a)
-
-mu mempty        == \ p -> mempty
-mu (top <> bot)  == \ p -> mu top p <> mu bot p
-
-mu mempty        == mempty
-mu (top <> bot)  == mu top <> mu bot
-
-mu (fmap f im) == f . mu im
-
-mu (fmap f im) == fmap f (mu im)
-
-mu (pure a)       == \ p -> a
-mu (imf <*> imx)  == \ p -> (mu imf p) (mu imx p)
-
-mu (pure a)       == pure a
-mu (imf <*> imx)  == mu imf <*> mu imx
-
-meaning mempty    == mempty
-meaning (a <> b)  == meaning a <> meaning b
-
-a <> mempty    == a
-mempty <> b    == b
-a <> (b <> c)  == (a <> b) <> c
-
-    meaning (a <> mempty)
-==  meaning a <> meaning mempty
-==  meaning a <> mempty
-==  meaning a
-
-    meaning (mempty <> b)
-==  meaning mempty <> meaning b
-==  mempty <> meaning b
-==  meaning b
-
-    meaning (a <> (b <> c))
-==  meaning a <> (meaning b <> meaning c)
-==  (meaning a <> meaning b) <> meaning c
-==  meaning ((a <> b) <> c)
--}
