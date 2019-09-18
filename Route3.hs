@@ -1,7 +1,6 @@
 module Route3 where
 
 import Prelude hiding (Monoid, Semigroup, Functor, fmap, Applicative, (<*>), pure)
-import Control.Monad (join)
 
 import Optional
 import Monoid
