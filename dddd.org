@@ -1,0 +1,225 @@
+#+LATEX_HEADER: \usepackage{stmaryrd}
+
+* Denotational Domain-Driven Design
+
+#+BEGIN_CENTER
+Michael Sperber
+Active Group GmbH
+
+@sperbsen
+
+[[https://github.com/mikesperber/architecture-summit-2019]]
+#+END_CENTER
+
+* Active Group GmbH
+
+[[file:images/ag-logo-plain.png][file:images/ag-logo-plain.png]]
+- Individualsoftware
+- funktionale Programmierung
+- Scala, Clojure, F#, Haskell, OCaml, Erlang, Elixir, Swift
+- Schulungen und Coaching
+
+Blog: [[https://funktionale-programmierung.de]]
+
+* BOB 2020
+
+[[file:images/bobkonf_2020_2to1.jpg][file:images/bobkonf_2020_2to1.jpg]]
+
+28.2.2020
+Call offen bis 8.11.!
+
+https://bobkonf.de/2020/
+
+* FUNAR - Funktionale Softwarearchitektur
+
+- iSAQB Advanced: 10 Punkte Methodik, 20 Punkte Technik
+- 18.-21.11.2019, Berlin
+- 2.12.-5.12.2019, Hamburg
+- suchen noch Teilnehmer für Stuttgart
+
+* Abstraktion
+
+"Good programmers will naturally start to abstract and develop a model
+that can do more work. But when this happens only in a technical
+setting, without collaboration with domain experts, the concepts are
+naïve. That shallowness of knowledge produces software that does a
+basic job but lacks a deep connection to the domain expert’s way of
+thinking."
+
+*Eric Evans*, /Domain-Driven Design/
+
+* Deep Models
+
+"A “deep model” provides a lucid expression of the primary concerns of
+the domain experts and their most relevant knowledge while it sloughs
+off the superficial aspects of the domain." 
+
+*Eric Evans*, /Domain-Driven Design/
+
+* Closure of Operations
+
+"Where it fits, define an operation whose return type is the same as
+the type of its argument(s)."
+
+*Eric Evans*, /Domain-Driven Design/
+
+* Tiere auf dem texanischen Highway
+
+Code
+
+* "Lucid Expression"
+
+- UML-Diagramm?
+- Dokumentation?
+- Interface?
+- Implementierung?
+
+* Interfaces
+#+begin_src haskell
+type Image
+
+emptyImage :: Image
+monochrome :: Color -> Image
+circle     :: R -> Color -> Image
+square     :: R -> Color -> Image
+over       :: Image -> Image -> Image
+#+end_src
+
+* Bild
+
+[[file:images/image1.png][file:images/image1.png]]
+
+* Bild
+
+[[file:images/image2.png]]
+
+* Bild
+
+[[file:images/image3.png]]
+
+
+* Bild
+
+[[file:images/image4.png]]
+
+* Bild
+
+[[file:images/image5.jpg]]
+
+
+* Modelling
+
+[[file:images/deep-model.png][images/deep-model.png]]
+
+*Eric Evans*, /Domain-Driven Design/
+
+* Denotational Design
+
+[[file:images/conal-2011-05-1000.jpg][file:images/conal-2011-05-1000.jpg]]
+
+*Conal Elliott*, /Denotational design with type class morphisms/
+
+* Denotation
+
+Was *bedeutet* das?
+
+\begin{displaymath}
+\begin{array}{rcl}
+\llbracket \texttt{Image} \rrbracket &=& \mathit{Location} \rightarrow \mathit{Color}\\
+       \llbracket \texttt{emptyImage}~\mathit{location}\rrbracket &=& \mathit{clear}\\
+\llbracket \texttt{monochrome}~\textit{color} \rrbracket~\mathit{location} &=& \mathit{color}
+\end{array}
+\end{displaymath}
+
+* Struktur
+
+Dings -> [[file:images/Honeycomb_of_regular_dodecahedra-cubes-J91.png][file:images/Honeycomb_of_regular_dodecahedra-cubes-J91.png]]
+
+* Morphismus
+
+\begin{displaymath}
+  \begin{array}{rcl}
+    \varowedge_M &:& M \rightarrow M \rightarrow M\\
+    \varowedge_N &:& N \rightarrow N \rightarrow N\\
+\llbracket a \varowedge_M b\rrbracket & \equiv & \llbracket a\rrbracket
+                                        \varowedge_N \llbracket b\rrbracket
+  \end{array}
+\end{displaymath}
+
+* Plan
+
+- Maps
+- Bilder
+- Routen in der Halbleiterfabrikation
+
+* Monoid
+
+\begin{displaymath}
+  \begin{array}{rcl}
+    x~\texttt{`combine`}~\texttt{neutral}& \equiv & x\\
+    \texttt{neutral}~\texttt{`combine`}~x& \equiv & x\\
+    (x~\texttt{`combine`}~y)~\texttt{`combine`}~z & \equiv &
+    x~\texttt{`combine`}~(y~\texttt{`combine`}~z)
+  \end{array}
+\end{displaymath}
+
+
+* Monoid Map
+
+\begin{displaymath}
+  \begin{array}{ll}
+    & \llbracket \mathit{map}~\texttt{`combine`}~\texttt{neutral}\rrbracket\\
+    \equiv & \llbracket
+             \texttt{unionWith}~\texttt{optionalLeft}~\mathit{map}~\texttt{neutral}
+             \rrbracket\\
+    \equiv & \lambda\mathit{key} \rightarrow
+    \texttt{optionalLeft}~(\llbracket\mathit{map}\rrbracket~\mathit{key})~(\llbracket\texttt{empty}\rrbracket~\mathit{key})
+\\
+    \equiv & \lambda\mathit{key} \rightarrow
+    \texttt{optionalLeft}~(\llbracket\mathit{map}\rrbracket~\mathit{key})~\texttt{Absent}
+\\
+    \equiv & \lambda\mathit{key} \rightarrow
+    \llbracket\mathit{map}\rrbracket~\mathit{key}
+\\
+\equiv & \llbracket\mathit{map}\rrbracket
+  \end{array}
+\end{displaymath}
+
+* Funktor
+
+\begin{displaymath}
+  \begin{array}{rcl}
+    \texttt{fmap}~\mathit{identity} & \equiv & \mathit{identity}\\
+    \texttt{fmap}~(f \circ g) & \equiv & (\texttt{fmap}~f) \circ (\texttt{fmap}~g)
+  \end{array}
+\end{displaymath}
+
+
+* Applicative
+
+\begin{displaymath}
+  \begin{array}{rcl}
+    (\texttt{pure}~\mathit{identity}) \varoast{} v  & \equiv & v\\
+    (\texttt{pure}\circ) \varoast{} u \varoast{} v \varoast{} w &
+                                                                 \equiv & u \varoast{} (v \varoast{} w)\\
+    \texttt{pure}~f \varoast{} \texttt{pure}~x & \equiv& \texttt{pure}~(f~x)\\
+    u \varoast{} \texttt{pure}~y & \equiv & \texttt{pure}~(\lambda f\rightarrow~f~y) \varoast{} u
+  \end{array}
+\end{displaymath}
+
+
+* Halbleiterfabrikation
+
+[[file:images/semi.png][file:images/semi.png]]
+
+* Halbleiterfabrikation
+
+[[file:images/semi2.png][file:images/semi2.png]]
+
+* Queue-Time-Zonen
+
+[[file:images/qtime.png][file:images/qtime.png]]
+
+Pro Route:
+- 1000 Operationen
+- 50 separate Q-Time-Zonen
