@@ -1,5 +1,3 @@
-{-# LANGUAGE StandaloneDeriving #-}
-{-# LANGUAGE GADTs #-}
 module Route3 where
 
 import Prelude hiding (Monoid, Semigroup, Functor, fmap, Applicative, (<*>), pure)
@@ -13,15 +11,13 @@ import Applicative
 type Duration = Int
 type Time = Int
 
-data Operation = TrackIn | Process | TrackOut 
+data Operation = TrackIn | Process | TrackOut
+  deriving Show
 
-deriving instance Show Operation
-
-data Route op where
-  Route :: RouteRem op -> Route op
-  RouteQTLimit :: Time -> Route op -> RouteRem op -> Route op
-
-deriving instance Show op => Show (Route op)
+data Route op =
+    Route (RouteRem op)
+  | RouteQTLimit Time (Route op) (RouteRem op)
+  deriving Show
 
 instance Functor Route where
   fmap f (Route rr) = Route (fmap f rr)
@@ -38,11 +34,10 @@ instance Monoid (RouteRem op) where
   (RouteRem els1) `combine` (RouteRem els2) = RouteRem (combine els1 els2)
   neutral = RouteRem []
 
-data RouteElement op where
-  RouteOp :: op -> RouteElement op
-  RouteQTZone :: Duration -> RouteRem op -> RouteElement op
-
-deriving instance Show op => Show (RouteElement op)
+data RouteElement op =
+    RouteOp op
+  | RouteQTZone Duration (RouteRem op)
+  deriving Show
 
 instance Functor RouteElement where
   fmap f (RouteOp op) = RouteOp (f op)
@@ -109,25 +104,3 @@ routeRemAdvance (RouteRem []) _t = Absent
 routeRemAdvance (RouteRem ((RouteOp op):rest)) _t = Present (op, Route (RouteRem rest))
 routeRemAdvance (RouteRem ((RouteQTZone d rm):rest)) t =
   routeAdvance (RouteQTLimit (t+d) (Route rm) (RouteRem rest)) t
-
-{-
-routeAdvance (RouteQTLimit tm rm after) t =
-  case routeAdvance rm t of
-    Absent -> routeAdvance after t
-    Present (op, rest) -> Present (op, RouteQTLimit tm rest after)
--}
-
-{-
-routeEnterQTZone :: Route -> Time -> Route
-routeEnterQTZone rt tm =
-  r rt (\route -> route)
-  where
-    r :: Route -> (Route -> Route) -> Route
-    r (((RouteQTZone dur rm):rest)) f =
-      r rm (\body -> RouteQTLimit (tm + dur) body (f (rest)))
-    r (_) f = f rt
-    r (RouteQTLimit end rm rest) f =
-       r rm (\body -> RouteQTLimit end body (f rest))
-    
-
--}

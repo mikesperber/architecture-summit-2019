@@ -1,6 +1,3 @@
-{-# LANGUAGE StandaloneDeriving #-}
-{-# LANGUAGE GADTs #-}
-
 module Route0 where
 
 import Optional
@@ -9,8 +6,7 @@ type Duration = Int
 type Time = Int
 
 data Operation = TrackIn | Process | TrackOut 
-
-deriving instance Show Operation
+  deriving Show
 
 type Route = [Operation]
 

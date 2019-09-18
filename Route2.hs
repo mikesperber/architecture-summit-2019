@@ -1,5 +1,3 @@
-{-# LANGUAGE StandaloneDeriving #-}
-{-# LANGUAGE GADTs #-}
 module Route2 where
 
 import Optional
@@ -8,22 +6,19 @@ type Duration = Int
 type Time = Int
 
 data Operation = TrackIn | Process | TrackOut 
+  deriving Show
 
-deriving instance Show Operation
-
-data Route where
-  Route :: RouteRem -> Route
-  RouteQTLimit :: Time -> Route -> RouteRem -> Route
-
-deriving instance Show Route
+data Route =
+    Route RouteRem
+  | RouteQTLimit Time Route RouteRem
+  deriving Show
   
 type RouteRem = [RouteElement]
 
-data RouteElement where
-  RouteOp :: Operation -> RouteElement
-  RouteQTZone :: Duration -> RouteRem -> RouteElement
-
-deriving instance Show RouteElement
+data RouteElement =
+    RouteOp Operation
+  | RouteQTZone Duration RouteRem
+  deriving Show
 
 r1 = Route [RouteOp TrackIn, RouteOp Process, RouteOp Process, RouteOp TrackOut]
 r2 = Route [RouteOp TrackIn,
@@ -61,7 +56,7 @@ routeElementHead (RouteQTZone _d rm) = routeRemHead rm
 
 routeAdvance :: Route -> Time ->  Optional (Operation, Route)
 routeAdvance (Route rm) t = routeRemAdvance rm t
-routeAdvance (RouteQTLimit _lt rt rm) t =
+routeAdvance (RouteQTLimit lt rt rm) t =
   case routeAdvance rt t of
     Absent -> routeRemAdvance rm t
     Present (op, rt') -> Present (op, RouteQTLimit t rt' rm)
@@ -73,24 +68,3 @@ routeRemAdvance (el:rest) t =
     RouteQTZone d rm ->
       routeAdvance (RouteQTLimit (t+d) (Route rm) rest) t
 
-{-
-routeAdvance (RouteQTLimit tm rm after) t =
-  case routeAdvance rm t of
-    Absent -> routeAdvance after t
-    Present (op, rest) -> Present (op, RouteQTLimit tm rest after)
--}
-
-{-
-routeEnterQTZone :: Route -> Time -> Route
-routeEnterQTZone rt tm =
-  r rt (\route -> route)
-  where
-    r :: Route -> (Route -> Route) -> Route
-    r (((RouteQTZone dur rm):rest)) f =
-      r rm (\body -> RouteQTLimit (tm + dur) body (f (rest)))
-    r (_) f = f rt
-    r (RouteQTLimit end rm rest) f =
-       r rm (\body -> RouteQTLimit end body (f rest))
-    
-
--}
