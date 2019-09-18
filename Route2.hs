@@ -1,6 +1,9 @@
 module Route2 where
 
+import Prelude hiding (Monoid, Semigroup, Functor, fmap, Applicative, (<*>), pure)
+
 import Optional
+import Monoid
 
 type Duration = Int
 type Time = Int
@@ -67,4 +70,11 @@ routeRemAdvance (el:rest) t =
     RouteOp op -> Present (op, Route rest)
     RouteQTZone d rm ->
       routeAdvance (RouteQTLimit (t+d) (Route rm) rest) t
+
+-- monoid instance for RouteRem: need newtype
+{-
+instance Monoid RouteRem where
+  (RouteRem els1) `combine` (RouteRem els2) = RouteRem (combine els1 els2)
+  neutral = RouteRem []
+-}
 
