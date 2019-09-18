@@ -13,7 +13,7 @@ type Route = [RouteElement]
 data RouteElement =
     RouteOp Operation
   | RouteQTZone Duration Route
-  -- probem here: can appear anywhere
+  -- problem here: can appear anywhere
   | RouteQTLimit Time Route
   deriving Show
 

@@ -10,6 +10,7 @@ fmap id = id
 fmap (h . g) = fmap h . fmap g
 -}
 
+-- exercises
 instance Functor ((->) a) where
   fmap = (.)
 

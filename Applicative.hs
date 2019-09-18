@@ -17,12 +17,14 @@ u <*> pure y = pure ($ y) <*> u              -- Interchange
 pure (.) <*> u <*> v <*> w = u <*> (v <*> w) -- Composition
 -}
 
+-- exercise
 liftApplicative2 :: Applicative f => (a -> b -> c) -> (f a -> f b -> f c)
 liftApplicative2 f a b = (pure f) <*> a <*> b
 
 liftApplicative3 :: Applicative f => (a -> b -> c -> d) -> (f a -> f b -> f c -> f d)
 liftApplicative3 f a b c = (pure f) <*> a <*> b <*> c
 
+-- exercise
 instance Applicative ((->) a) where
   pure a     = \ _ -> a
   fs <*> xs  = \ u -> (fs u) (xs u)

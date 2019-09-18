@@ -67,5 +67,5 @@ inImage2 :: ((Location -> Color) -> (Location -> Color) -> (Location -> Color))
               -> (Image -> Image -> Image)
 inImage2 f = \ image1 image2 -> Image (f (meaning image1) (meaning image2))
 
--- then reformulate over, crop in terms of this ... FIXME: only over works here
+-- exercise: reformulate over in terms of this
 

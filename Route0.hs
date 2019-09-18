@@ -20,3 +20,4 @@ routeAdvance :: Route -> Optional (Operation, Route)
 routeAdvance [] = Absent
 routeAdvance (op:rest) = Present (op, rest)
 
+-- exercise: maybe monoid

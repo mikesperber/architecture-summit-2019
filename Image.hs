@@ -45,6 +45,7 @@ over = lift2 overColor
 
 crop region image   = cond region image emptyImage
 
+-- exercise
 cond   :: Image Bool -> Image a -> Image a -> Image a
 cond = lift3 ifThenElse
 

@@ -34,6 +34,7 @@ instance Applicative (TMap k) where
   pure value = TMap (\ key -> value)
   f <*> g = TMap (\ key -> ((meaning f) key) ((meaning g) key))
 
+-- exercise
 constant :: value -> TMap key value
 constant = pure
 unionWith :: (value1 -> value2 -> value) -> TMap key value1 -> TMap key value2 -> TMap key value

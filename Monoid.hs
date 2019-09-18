@@ -14,6 +14,7 @@ neutral `combine` b    == b
 a `combine` (b `combine` c)  == (a `combine` b) `combine` c
 -}
 
+-- exercises
 instance Monoid [a] where
   neutral = []
   combine list1 list2 = list1 ++ list2

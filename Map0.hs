@@ -25,6 +25,7 @@ unionLeft :: Map key value -> Map key value -> Map key value
 unionLeft map1 map2 =
   Map (\ key -> (mapMeaning map1) key `optionalLeft` (mapMeaning map2) key)
 
+-- exercise
 optionalLeft :: Optional a -> Optional a -> Optional a
 optionalLeft (Present a) _ = Present a
 optionalLeft Absent optional2 = optional2
