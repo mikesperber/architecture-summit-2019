@@ -126,7 +126,7 @@ Was *bedeutet* das?
 \begin{displaymath}
 \begin{array}{rcl}
 \llbracket \texttt{Image} \rrbracket &=& \mathit{Location} \rightarrow \mathit{Color}\\
-       \llbracket \texttt{emptyImage}~\mathit{location}\rrbracket &=& \mathit{clear}\\
+       \llbracket \texttt{emptyImage}\rrbracket~\mathit{location} &=& \mathit{clear}\\
 \llbracket \texttt{monochrome}~\textit{color} \rrbracket~\mathit{location} &=& \mathit{color}
 \end{array}
 \end{displaymath}
