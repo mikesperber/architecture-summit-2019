@@ -24,7 +24,7 @@ newtype First a = First (Optional a)
 
 unFirst (First optional) = optional
 
-instance Monoid a => Monoid (First a) where
+instance Monoid (First a) where
   neutral = First Absent
   combine left@(First (Present _)) _ = left
   combine (First Absent) right = right 
@@ -32,7 +32,7 @@ instance Monoid a => Monoid (First a) where
 newtype Last a = Last (Optional a)
   deriving (Eq, Ord, Read, Show)
 
-instance Monoid a => Monoid (Last a) where
+instance Monoid (Last a) where
   neutral = Last Absent
   combine _ right@(Last (Present _)) = right
   combine left (Last Absent) = left
